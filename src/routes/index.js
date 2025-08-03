@@ -1,8 +1,10 @@
 const express = require('express');
-const { getAllData } = require('../controllers/index');
+const { getAllHoldings, getAllStocks,updateHoldings } = require('../controllers/index');
 
 const router = express.Router();
 
-router.get('/data', getAllData); // API endpoint: GET /data
+router.get('/getAllHoldings', getAllHoldings); // API endpoint: GET /data
+router.get('/getAllStocks', getAllStocks);
+router.post('/updateHoldings', updateHoldings);
 
 module.exports = router;
