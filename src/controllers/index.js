@@ -1,6 +1,7 @@
 const db = require('../config/database');
-
+const bcrypt = require("bcrypt");
 const finnhub = require('finnhub');
+
 
 const finnhubClient = new finnhub.DefaultApi("d25ku19r01qns40ff5bgd25ku19r01qns40ff5c0") // Replace this
 
@@ -166,7 +167,68 @@ const updateHoldings = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-module.exports = { getAllHoldings, getAllStocks, updateHoldings };
+
+// const register = (req, res) => {
+//   // check is username or email already exists
+//   console.log("register hit");
+
+//   const q = "SELECT * FROM user WHERE user_name = ? OR email = ?";
+//   console.log("About to query DB");
+//   db.query(q, [req.body.username, req.body.email], (err, data) => {
+//     console.log("DB query callback hit");
+//     if (err) {
+//       console.error("DB error:", err);
+//       return res.status(500).json(err);
+//     }
+//     if (data.length) return res.status(409).json("User already exists!");
+
+//     console.log("register hit 1");
+//     // hash password and create user
+//     const salt = bcrypt.genSaltSync(10);
+//     const hash = bcrypt.hashSync(req.body.password, salt);
+//     console.log("register hit 2");
+
+//     // insert new user into database
+//     const q = "INSERT INTO user (`user_name`, `email`, `password`) VALUES (?)";
+//     const values = [req.body.username, req.body.email, hash];
+//     console.log("register hit 3");
+
+//     db.query(q, [values], (err, data) => {
+//       if (err) return res.status(500).json(err);
+//       return res.status(200).json("User has been created successfully!");
+//     });
+
+//     console.log("register hit 4");
+//   });
+// };
+
+// write register with just getting user_name, email and password and enter it to user table
+
+// const register = async (req, res) => {
+//   const { user_name, email, password } = req.body;
+//   console.log('Register API called:', req.body);
+
+//   if (!user_name || !email || !password) {
+//     console.log('Missing fields');
+//     return res.status(400).json({ error: 'Missing required fields' });
+//   }
+
+//   const q = "INSERT INTO user (`user_name`, `email`, `password`) VALUES (?)";
+//   const values = [user_name, email, password];
+
+//   console.log('About to query DB');
+//   try {
+//     await db.query(q, [values]);
+//     console.log('DB query callback hit');
+//     return res.status(200).json({ message: 'User has been created' });
+//   } catch (err) {
+//     console.error("DB error:", err);
+//     return res.status(500).json(err);
+//   }
+// };
+module.exports = { getAllHoldings, getAllStocks, updateHoldings};
+
+
 
 
 
