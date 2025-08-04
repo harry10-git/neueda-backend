@@ -145,7 +145,7 @@ const getHoldingsByUserId = async (req, res) => {
   try {
     const [holdings] = await db.query(q, [user_id]);
 
-    // You may need to use stock_name as the symbol for finnhub if that's what you store
+    // For each holding, fetch real-time data and logo from finnhub
     const enrichedHoldings = await Promise.all(
       holdings.map(holding => {
         return new Promise((resolve) => {
@@ -157,7 +157,8 @@ const getHoldingsByUserId = async (req, res) => {
                 price_diff: null,
                 percent_diff: null,
                 week_52_high: null,
-                week_52_low: null
+                week_52_low: null,
+                logo: null
               });
             }
 
@@ -169,20 +170,26 @@ const getHoldingsByUserId = async (req, res) => {
                 week_52_low = finData.metric['52WeekLow'] || null;
               }
 
-              const curr_price = quoteData.c || null;
-              const prev_close = quoteData.pc || null;
-              const price_diff = (curr_price !== null && prev_close !== null) ? (curr_price - prev_close) : null;
-              const percent_diff = (curr_price !== null && prev_close !== null && prev_close !== 0)
-                ? ((curr_price - prev_close) / prev_close) * 100
-                : null;
+              // Fetch logo using companyProfile2
+              finnhubClient.companyProfile2({ symbol: holding.stock_name }, (logoErr, profileData) => {
+                const logo = (!logoErr && profileData && profileData.logo) ? profileData.logo : null;
 
-              resolve({
-                ...holding,
-                curr_price,
-                price_diff,
-                percent_diff,
-                week_52_high,
-                week_52_low
+                const curr_price = quoteData.c || null;
+                const prev_close = quoteData.pc || null;
+                const price_diff = (curr_price !== null && prev_close !== null) ? (curr_price - prev_close) : null;
+                const percent_diff = (curr_price !== null && prev_close !== null && prev_close !== 0)
+                  ? ((curr_price - prev_close) / prev_close) * 100
+                  : null;
+
+                resolve({
+                  ...holding,
+                  curr_price,
+                  price_diff,
+                  percent_diff,
+                  week_52_high,
+                  week_52_low,
+                  logo
+                });
               });
             });
           });
