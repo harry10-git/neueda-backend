@@ -59,6 +59,10 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
   // Logic for user logout
+  res.clearCookie("access_token",{
+    sameSite:"none",
+    secure:true
+  }).status(200).json("User has been logged out.")
 };
 
 module.exports = {
