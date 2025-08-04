@@ -204,4 +204,34 @@ const getHoldingsByUserId = async (req, res) => {
   }
 };
 
-module.exports = { getHoldingsByUserId, getUserStocksNews };
+const allStockLogos = async (req, res) => {
+  try {
+    // Get all distinct stock names from the stocks table
+    const q = `SELECT DISTINCT stock_name FROM stocks`;
+    const [stocks] = await db.query(q);
+
+    // For each stock, fetch the logo from finnhub
+    const logos = await Promise.all(
+      stocks.map(stock =>
+        new Promise((resolve) => {
+          finnhubClient.companyProfile2({ symbol: stock.stock_name }, (err, profileData) => {
+            if (err || !profileData || !profileData.logo) {
+              return resolve(null);
+            }
+            resolve(profileData.logo);
+          });
+        })
+      )
+    );
+
+    // Filter out any nulls (stocks with no logo found)
+    const filteredLogos = logos.filter(logo => !!logo);
+
+    return res.status(200).json(filteredLogos);
+  } catch (err) {
+    console.error("DB error or Finnhub error:", err);
+    return res.status(500).json({ error: "Failed to fetch stock logos" });
+  }
+};
+
+module.exports = { getHoldingsByUserId, getUserStocksNews, allStockLogos };

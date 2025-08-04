@@ -1,16 +1,21 @@
 const express = require('express');
 const { getAllHoldings, getAllStocks,updateHoldings } = require('../controllers/index');
-const { getHoldingsByUserId , getUserStocksNews} = require('../controllers/stocks');
+const { getHoldingsByUserId , getUserStocksNews, allStockLogos} = require('../controllers/stocks');
 const { register, login, logout } = require('../controllers/auth');
 const { addWalletCash } = require('../controllers/user');
+const {sellStock} = require('../controllers/trade')
 
 const router = express.Router();
+
+router.post('/sell', sellStock);
+
 
 router.post('/addCash', addWalletCash);
 
 router.get('/stockNews/:user_id', getUserStocksNews);
 router.get('/holdings/:user_id', getHoldingsByUserId); // API endpoint: GET /holdings/:user_id
 router.get('/getAllHoldings', getAllHoldings); // API endpoint: GET /data
+router.get('/allStockLogos', allStockLogos); // API endpoint: GET /allStockLogos
 router.get('/getAllStocks', getAllStocks);
 router.post('/updateHoldings', updateHoldings);
 
