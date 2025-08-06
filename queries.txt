@@ -40,3 +40,21 @@ INSERT INTO stocks (stock_id, stock_name, curr_price) VALUES
 (8, 'NVDA', 911.12),     -- NVIDIA Corp.
 (9, 'BABA', 87.53),      -- Alibaba Group
 (10, 'AMD', 156.72);     -- Advanced Micro Devices
+
+
+
+INSERT INTO holdings (user_id, stock_id, holding_quantity, valuation, buy_datetime) VALUES
+-- User 1 Holdings
+(1, 1, 10, 1900.00, '2025-07-20 10:15:00'),   -- AAPL
+(1, 2, 5, 1300.00, '2025-07-22 14:30:00'),    -- TSLA
+(1, 4, 8, 1120.00, '2025-07-25 09:45:00'),    -- AMZN
+
+-- User 2 Holdings
+(2, 3, 12, 1600.00, '2025-06-18 11:00:00'),   -- GOOGL
+(2, 5, 6, 2400.00, '2025-07-01 13:20:00'),    -- MSFT
+(2, 6, 4, 1250.00, '2025-07-10 16:10:00'),    -- META
+
+-- User 3 Holdings
+(3, 7, 3, 1575.00, '2025-06-30 15:45:00'),    -- NFLX
+(3, 8, 2, 1800.00, '2025-07-18 12:00:00'),    -- NVDA
+(3, 1, 6, 1150.00, '2025-07-12 10:00:00');    -- AAPL again
