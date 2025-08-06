@@ -1,0 +1,28 @@
+
+CREATE TABLE user (
+    user_id INT PRIMARY KEY auto_increment,
+    user_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password varchar(100) not null,
+    wallet_cash DECIMAL(10, 2) DEFAULT 0.00
+);
+
+drop table holdings;
+drop table stocks;
+CREATE TABLE stocks (
+    stock_id INT PRIMARY KEY,
+    stock_name VARCHAR(100) NOT NULL,
+    curr_price DECIMAL(10, 2) NOT NULL
+);
+
+
+CREATE TABLE holdings (
+    user_id INT,
+    stock_id INT,
+    holding_quantity INT NOT NULL,
+    valuation double NOT NULL,
+    buy_datetime DATETIME NOT NULL,
+    PRIMARY KEY (user_id, stock_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (stock_id) REFERENCES stocks(stock_id)
+);
