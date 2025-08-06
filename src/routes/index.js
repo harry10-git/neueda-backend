@@ -4,6 +4,7 @@ const { getHoldingsByUserId , getUserStocksNews, allStockLogos, getAllStocksBuy}
 const { register, login, logout } = require('../controllers/auth');
 const { addWalletCash , getWalletCash} = require('../controllers/user');
 const {sellStock, buyStock} = require('../controllers/trade')
+const {chatApi} = require('../controllers/chatbot');
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.post('/updateHoldings', updateHoldings);
 router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', logout);
+router.post('/chat', chatApi)
 
 module.exports = router;
