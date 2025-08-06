@@ -26,3 +26,17 @@ CREATE TABLE holdings (
     FOREIGN KEY (user_id) REFERENCES user(user_id),
     FOREIGN KEY (stock_id) REFERENCES stocks(stock_id)
 );
+
+
+
+INSERT INTO stocks (stock_id, stock_name, curr_price) VALUES
+(1, 'AAPL', 192.38),     -- Apple Inc.
+(2, 'TSLA', 265.28),     -- Tesla Inc.
+(3, 'GOOGL', 135.65),    -- Alphabet Inc.
+(4, 'AMZN', 142.57),     -- Amazon.com Inc.
+(5, 'MSFT', 413.12),     -- Microsoft Corp.
+(6, 'META', 312.44),     -- Meta Platforms Inc.
+(7, 'NFLX', 524.73),     -- Netflix Inc.
+(8, 'NVDA', 911.12),     -- NVIDIA Corp.
+(9, 'BABA', 87.53),      -- Alibaba Group
+(10, 'AMD', 156.72);     -- Advanced Micro Devices
