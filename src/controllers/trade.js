@@ -1,13 +1,9 @@
 const db = require("../config/database");
 
 const sellStock = async (req, res) => {
-    // console.log('trigger sell');
-    
   const { user_id, stock_id, curr_price, sellQuantity } = req.body;
 
   if (!user_id || !stock_id || !curr_price || !sellQuantity) {
-    console.log(user_id, stock_id, curr_price, sellQuantity);
-    
     return res.status(400).json({ error: "user_id, stock_id, curr_price, and sellQuantity are required" });
   }
 
@@ -28,6 +24,8 @@ const sellStock = async (req, res) => {
       return res.status(400).json({ error: "Sell quantity exceeds holding quantity" });
     }
 
+    const soldAmount = sellQuantity * curr_price;
+
     if (sellQuantity === holding_quantity) {
       // Remove the row if selling all
       await db.query(
@@ -37,12 +35,18 @@ const sellStock = async (req, res) => {
     } else {
       // Update the row with new quantity and valuation
       const newQuantity = holding_quantity - sellQuantity;
-      const newValuation = valuation - (sellQuantity * curr_price);
+      const newValuation = valuation - soldAmount;
       await db.query(
         "UPDATE holdings SET holding_quantity = ?, valuation = ? WHERE user_id = ? AND stock_id = ?",
         [newQuantity, newValuation, user_id, stock_id]
       );
     }
+
+    // Add the sold amount to user's wallet_cash
+    await db.query(
+      "UPDATE user SET wallet_cash = wallet_cash + ? WHERE user_id = ?",
+      [soldAmount, user_id]
+    );
 
     return res.status(200).json({ message: "Stock sold successfully" });
   } catch (err) {
@@ -54,7 +58,7 @@ const sellStock = async (req, res) => {
 const buyStock = async (req, res) => {
   const { user_id, stock_id, buyQuantity, curr_price } = req.body;
 
-  console.log('user_id:', user_id, 'stock_id:', stock_id, 'buyQuantity:', buyQuantity, 'curr_price:', curr_price);
+  // console.log('user_id:', user_id, 'stock_id:', stock_id, 'buyQuantity:', buyQuantity, 'curr_price:', curr_price);
   
 
   if (!user_id || !stock_id || !buyQuantity || !curr_price) {
